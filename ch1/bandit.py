@@ -46,6 +46,15 @@ class Agent:
         return np.argmax(self.Qs)  # max_n (Q_n)
 
 
+class AlphaAgent(Agent):
+    def __init__(self, epsilon: float, alpha: float, actions: int = 10):
+        super().__init__(epsilon, actions)
+        self.alpha = alpha
+
+    def update(self, action: int, reward: int):
+        self.Qs[action] += (reward - self.Qs[action]) * self.alpha
+
+
 def main():
     avg_total_rewards = []
     avg_rates = []
@@ -66,7 +75,7 @@ def train() -> Tuple[List[float], List[float]]:
     epsilon: float = 0.1
 
     bandit = NonStatBandit()
-    agent = Agent(epsilon)
+    agent = AlphaAgent(epsilon, alpha=0.8)
     total_reward: int = 0
     total_rewards: List[int] = []
     rates: List[float] = []
